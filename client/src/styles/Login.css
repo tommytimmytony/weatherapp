@@ -1,0 +1,125 @@
+/* Main container */
+.main-container {
+    height: 100vh;
+    width: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+.main-container::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: black;
+    opacity: 0.3;
+}
+
+/* Centered grid */
+.center-grid {
+    display: grid;
+    place-items: center;
+    height: 100%;
+}
+
+/* Form container */
+.form-container {
+    border: 1px solid #aaa; /* border-metallicSilver */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border-radius: 1rem;
+    height: 25rem;
+    background-color: rgba(45, 45, 45, 0.55); /* bg-darkCharcoal/55 */
+    backdrop-filter: blur(5px);
+    width: 22rem;
+}
+
+.form-container-lg {
+    width: 30rem;
+}
+
+/* Form styles */
+.form {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
+    padding-left: 1.25rem;
+}
+
+.form-lg-padding {
+    padding-left: 2.5rem;
+}
+
+/* Heading */
+.heading {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #ffdf00; /* text-cyberYellow */
+    align-self: center;
+}
+
+/* Labels */
+.label {
+    color: #00bfff; /* text-electricBlue */
+    margin-bottom: 0.5rem;
+}
+
+/* Inputs */
+.input-container {
+    position: relative;
+    width: 100%;
+}
+
+.input {
+    width: 100%;
+    border-radius: 0.5rem;
+    height: 2.25rem;
+    padding-left: 2rem;
+    padding-bottom: 0.25rem;
+    background-color: rgba(128, 128, 128, 0.2); /* bg-metallicSilver/20 */
+    color: #aaa; /* text-metallicSilver */
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+    outline: none;
+}
+
+.input:focus {
+    border: 2px solid #ff1493; /* focus:border-neonPink */
+}
+
+.icon {
+    font-size: 1.125rem;
+    color: #00bfff; /* text-electricBlue */
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+}
+
+/* Error message */
+.error-message {
+    font-size: 0.875rem;
+    color: #ff1493; /* text-neonPink */
+    font-weight: 600;
+    margin-top: 0.25rem;
+}
+
+/* Button */
+.button {
+    align-self: center;
+    background-color: #00bfff; /* bg-electricBlue */
+    color: #2d2d2d; /* text-darkCharcoal */
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    margin-top: 2rem;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: rgba(255, 223, 0, 0.8); /* hover:bg-cyberYellow/80 */
+    transform: scale(1.05);
+}
