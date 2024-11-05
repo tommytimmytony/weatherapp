@@ -1,5 +1,3 @@
-import { FaCloud } from "react-icons/fa";
-import { IoIosSearch } from "react-icons/io";
 import { CiLocationOn } from "react-icons/ci";
 import { MdOutlineDateRange } from "react-icons/md";
 import { IoSunnyOutline } from "react-icons/io5";
@@ -9,36 +7,9 @@ import { FiSunset } from "react-icons/fi";
 import { WiHumidity } from "react-icons/wi";
 import { RiTailwindCssFill } from "react-icons/ri";
 import { FaTemperatureHigh } from "react-icons/fa";
-import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { BsEyeFill } from "react-icons/bs";
 export default function Dashboard() {
   return (
-    <div className="flex flex-col min-h-screen w-full bg-gradient-to-b from-gray-800 to-gray-900 text-white mb">
-      {/* Top Bar with Logo, Search Bar, and Button */}
-      <div className="flex items-center justify-between p-4 bg-gray-800 shadow-lg">
-        {/* Logo */}
-        <div className="flex items-center text-2xl font-bold text-gray-100">
-          <FaCloud size={50} /> &nbsp; Weather App
-        </div>
-
-        {/* Search Bar */}
-        <div className="flex-grow mx-4 max-w-xs relative">
-          <IoIosSearch className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-400" />{" "}
-          {/* Icon positioned inside the container */}
-          <input
-            type="text"
-            placeholder="Search for a city..."
-            className="w-full pl-10 pr-4 py-2 rounded-lg bg-gray-700 text-white placeholder-gray-400 outline-none"
-          />
-        </div>
-
-        {/* Current Location Button */}
-        <button className="flex items-center px-4 py-2 bg-gray-700 rounded-lg shadow-md hover:bg-gray-600">
-          <CiLocationOn size={25} /> &nbsp; Current Location
-        </button>
-      </div>
-
-      {/* Main Content Section */}
       <div className="flex flex-col lg:flex-row h-full w-full p-4 space-y-4 lg:space-y-0 lg:space-x-4">
         {/* Left Section: Current Weather and 5-Day Forecast */}
         <div className="flex flex-col w-full lg:w-1/4 space-y-4">
@@ -190,6 +161,5 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-    </div>
   );
 }
