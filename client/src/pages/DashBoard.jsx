@@ -11,7 +11,44 @@ import { RiTailwindCssFill } from "react-icons/ri";
 import { FaTemperatureHigh } from "react-icons/fa";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { BsEyeFill } from "react-icons/bs";
+import { useState, useEffect } from "react";
+import { supabase } from "../client.js";
+
 export default function Dashboard() {
+  const [curWeather, setCurWeather] = useState();
+
+  const getTodayData = async () => {
+    try {
+      // Single query to find today weather
+      const todayDate = new Date().toLocaleDateString();
+      const { data: weather, error } = await supabase
+        .from("weather")
+        .select("*")
+        .eq("date", todayDate)
+        .single();
+      if (error) {
+        console.log(error);
+      } else {
+        console.log(weather);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  useEffect(() => {
+    const handleFetchData = () => {
+      // fetch(
+      //   `https://api.openweathermap.org/data/2.5/weather?q=San%20Antonio&appid=${
+      //     import.meta.env.VITE_OPENWEATHER_KEY
+      //   }&units=imperial`
+      // )
+      //   .then((res) => res.json())
+      //   .then((data) => console.log(data))
+      //   .catch((err) => console.log(err));
+    };
+    handleFetchData();
+  }, []);
+
   return (
     <div className="flex flex-col min-h-screen w-full bg-gradient-to-b from-gray-800 to-gray-900 text-white mb">
       {/* Top Bar with Logo, Search Bar, and Button */}
