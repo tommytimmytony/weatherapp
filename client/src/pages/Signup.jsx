@@ -45,7 +45,7 @@ export default function Signup() {
     } else {
       toast.success("Created account successfully");
       reset(); // Clear form only if the insertion was successful
-      navigate("/dashboard");
+      navigate("/");
     }
   };
 
@@ -109,10 +109,10 @@ export default function Signup() {
               disabled={isSaving}
               className="self-center bg-electricBlue text-darkCharcoal rounded-lg px-6 py-2.5 mt-8 shadow-md hover:bg-cyberYellow/80 hover:scale-105 duration-300"
             >
-              {isSaving ? "Loading..." : "Sign up"}
+              {isSaving ? "Loading..." : "Submit"}
             </button>
             <a
-              href="/"
+              href="/login"
               className="self-center text-slate-300 rounded-lg px-6 py-2.5 mt-8 hover:bg-red-600 hover:scale-105 duration-300"
             >
               {" "}

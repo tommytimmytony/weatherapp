@@ -43,7 +43,7 @@ export default function Login() {
       } else {
         // Redirect to dashboard if login is successful
         loginUser(user.id, user.email, user.username);
-        navigate("/dashboard");
+        navigate("/");
         reset();
       }
     } catch (error) {
@@ -98,7 +98,7 @@ export default function Login() {
               {isSaving ? "Loading..." : "Login"}
             </button>
             <a
-              href="/signup"
+              href="/sign-up"
               className="self-center text-slate-300 rounded-lg px-6 py-2.5 mt-8 hover:bg-red-600 hover:scale-105 duration-300"
             >
               {" "}
