@@ -12,6 +12,7 @@ export default function RootLayout() {
 
   useEffect(() => {
     console.log("Location: ", location);
+    //Only Show Navigation bar on non login and signup pages
     if (location.pathname === "/login" || location.pathname === "/sign-up") {
       setShowNavbar(false);
     } else {
@@ -22,7 +23,6 @@ export default function RootLayout() {
   return (
     <div className="flex flex-col min-h-screen w-full bg-gradient-to-b from-gray-800 to-gray-900 text-white mb">
       <Toaster position="top-right" richColors closeButton />
-      {/* Navigation Bar */}
       {showNavbar && <NavigationBar />}
       <main>
         <Outlet></Outlet>

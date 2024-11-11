@@ -10,7 +10,7 @@ import "./styles/DashBoard.css"
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/DashBoard";
-import Profile from "./pages/Profile";
+import Radar from "./pages/Radar";
 
 //Layouts
 import RootLayout from './Layouts/RootLayout';
@@ -19,7 +19,7 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<RootLayout />}>
       <Route index element={<Dashboard />} />
-      <Route path="profile" element={<Profile />} />
+      <Route path="radar" element={<Radar />} />
       <Route path="login" element={<Login />} />
       <Route path="sign-up" element={<Signup />} />
     </Route>
