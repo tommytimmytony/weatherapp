@@ -1,4 +1,4 @@
-import { supabase } from "../client";
+import { supabase } from "./client";
 
 export function getAirQualityLabel(pm2_5, so2, no2, o3) {
   // Define thresholds for each pollutant
@@ -279,3 +279,21 @@ export async function getNextForecastData(fullDate) {
     console.error("Error fetching next forecast data:", err);
   }
 }
+
+export async function reverseGeoLocation(latitude, longitude) {
+  try {
+    const [geoResponse] = await Promise.all([
+      fetch(
+        `https://api.opencagedata.com/geocode/v1/json?q=${latitude}%2C${longitude}&key=${
+          import.meta.env.VITE_GEO_KEY
+        }`
+      ).then((res) => res.json()),
+    ]);
+
+    return geoResponse.results[0].components.city;
+  } catch (error) {
+    console.error("Fetch data failed:", error);
+    return "Unable to access location";
+  }
+}
+

@@ -20,7 +20,7 @@ import {
   insertForecastData,
   getForecastData,
   getNextForecastData,
-} from "./functions.js";
+} from "../functions.js";
 import WeatherForecast from "../components/WeatherForecast.jsx";
 import NextDayForecast from "../components/NextDayForecast.jsx";
 export default function Dashboard() {
@@ -34,20 +34,6 @@ export default function Dashboard() {
   const [date, setDate] = useState(customGetDate("date"));
   const [todayForecast, setTodayForecast] = useState();
   const [nextForecast, setNextForecast] = useState();
-
-  const currentHour = new Date().getHours();
-  const forecastRefs = useRef({});
-
-  // Function to scroll to the active forecast (current hour)
-  const scrollToActive = () => {
-    const activeForecast = forecastRefs.current[currentHour];
-    if (activeForecast) {
-      activeForecast.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
-    }
-  };
 
   useEffect(() => {
     const getTodayData = async () => {
@@ -106,10 +92,6 @@ export default function Dashboard() {
   useEffect(() => {
     setAirQualityColor(getAirQualityColor(airQualityLabel));
   }, [airQualityLabel]);
-
-  useEffect(() => {
-    scrollToActive();
-  }, [currentHour]);
 
   return (
     <div className="flex flex-col lg:flex-row h-full w-full p-4 space-y-4 lg:space-y-0 lg:space-x-4">
