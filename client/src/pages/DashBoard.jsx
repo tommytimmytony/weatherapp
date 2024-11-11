@@ -21,7 +21,6 @@ import {
   getForecastData,
   getNextForecastData,
 } from "./functions.js";
-import "../styles/Dashboard.css";
 import WeatherForecast from "../components/WeatherForecast.jsx";
 import NextDayForecast from "../components/NextDayForecast.jsx";
 export default function Dashboard() {
