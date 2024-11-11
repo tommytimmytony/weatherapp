@@ -1,5 +1,5 @@
 # Weather App 🌦️
-This Weather App provides current weather details and a 5-day forecast for any city. Powered by an easy-to-use interface, it allows users to view temperature, humidity, wind speed, and more.
+This Weather App provides current weather details and a 2-day forecast for any city. Powered by an easy-to-use interface, it allows users to view temperature, humidity, wind speed, and more.
 
 Features:
 - Current Weather: Get real-time weather information for any city.
