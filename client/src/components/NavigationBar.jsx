@@ -6,7 +6,7 @@ import { IoIosSearch } from "react-icons/io";
 import { CiLocationOn } from "react-icons/ci";
 import { BiSolidLogInCircle } from "react-icons/bi";
 import { FaHome } from "react-icons/fa";
-import { CgProfile } from "react-icons/cg";
+import { GiRadarDish } from "react-icons/gi";
 
 import { reverseGeoLocation } from "../functions.js";
 
@@ -106,10 +106,10 @@ export default function NavigationBar() {
 
       {/* Profile */}
       <NavLink
-        to="profile"
+        to="radar"
         className="flex items-center px-4 py-2 bg-gray-700 rounded-lg shadow-md hover:bg-gray-600"
       >
-        <CgProfile size={25} /> &nbsp; Profile
+        <GiRadarDish size={25} /> &nbsp; Radar
       </NavLink>
     </div>
   );
