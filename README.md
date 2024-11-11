@@ -3,7 +3,7 @@ This Weather App provides current weather details and a 2-day forecast for any c
 
 Features:
 - Current Weather: Get real-time weather information for any city.
-- 5-Day Forecast: See upcoming weather trends to plan ahead.
+- 2-Day Forecast: See upcoming weather trends to plan ahead.
 - User-Friendly Interface: Simple and intuitive design.
 - Responsive Design: Works on both desktop and mobile devices.
 
