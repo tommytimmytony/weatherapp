@@ -1,9 +1,11 @@
 # Weather App 🌦️
-This Weather App provides current weather details and a 5-day forecast for any city. Powered by an easy-to-use interface, it allows users to view temperature, humidity, wind speed, and more.
+Please checkout our website: https://weatherappteam5.netlify.app/null.
+
+This Weather App provides current weather details and a 2-day forecast for any city. Powered by an easy-to-use interface, it allows users to view temperature, humidity, wind speed, and more.
 
 Features:
 - Current Weather: Get real-time weather information for any city.
-- 5-Day Forecast: See upcoming weather trends to plan ahead.
+- 2-Day Forecast: See upcoming weather trends to plan ahead.
 - User-Friendly Interface: Simple and intuitive design.
 - Responsive Design: Works on both desktop and mobile devices.
 
