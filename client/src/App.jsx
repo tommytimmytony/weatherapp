@@ -18,13 +18,13 @@ import RootLayout from './Layouts/RootLayout';
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<RootLayout />}>
-      <Route path="/:city" element={<Dashboard />} />
+      <Route path="/:citySelected" element={<Dashboard />} />
       <Route path="radar" element={<Radar />} />
       <Route path="login" element={<Login />} />
       <Route path="sign-up" element={<Signup />} />
     </Route>
   )
-)
+);
 
 export default function App() {
   return (

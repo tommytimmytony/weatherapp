@@ -47,10 +47,12 @@ export default function NavigationBar() {
   }
 
   useEffect(() => {
-    const findLocation = async () => {
-      setLocation(await reverseGeoLocation(latlon.lat, latlon.lon));
-    };
-    findLocation();
+    if (latlon) {
+      const findLocation = async () => {
+        setLocation(await reverseGeoLocation(latlon.lat, latlon.lon));
+      };
+      findLocation();
+    }
   }, [latlon]);
 
   useEffect(() => {

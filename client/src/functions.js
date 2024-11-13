@@ -1,5 +1,3 @@
-import { supabase } from "./client";
-
 export function getAirQualityLabel(pm2_5, so2, no2, o3) {
   // Define thresholds for each pollutant
   const thresholds = {
@@ -91,8 +89,26 @@ export function customGetDate(typeDate, dateString = "") {
   }
 }
 
-export function capitalizeFirstLetter(val) {
-  return String(val).charAt(0).toUpperCase() + String(val).slice(1);
+export function getNextDay(todayDate, addDay) {
+  const today = new Date(todayDate);
+  const nextDay = new Date(today);
+  nextDay.setDate(today.getDate() + addDay);
+
+  const year = nextDay.getFullYear();
+  const month = String(nextDay.getMonth() + 1).padStart(2, "0"); // Months are 0-based, so add 1
+  const day = String(nextDay.getDate()).padStart(2, "0");
+  const hours = String(nextDay.getHours()).padStart(2, "0");
+  const minutes = String(nextDay.getMinutes()).padStart(2, "0");
+
+  return `${year}-${month}-${day} ${hours}:${minutes}`;
+}
+
+export function capitalizeEachWord(val) {
+  return String(val)
+    .toLowerCase() // Make the entire string lowercase first
+    .split(" ") // Split the string into an array of words
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize first letter of each word
+    .join(" "); // Join the array back into a single string
 }
 
 export function getAirQualityColor(label) {
@@ -108,53 +124,13 @@ export function getAirQualityColor(label) {
   }
 }
 
-export function formatData(data) {
-  const sunsetTime = convertTo24HourTime(
-    data.forecast.forecastday[0].astro.sunset
-  );
-  const sunriseTime = convertTo24HourTime(
-    data.forecast.forecastday[0].astro.sunrise
-  );
-  const pm2_5 = parseFloat(data.current.air_quality.pm2_5).toFixed(1);
-  const so2 = parseFloat(data.current.air_quality.so2).toFixed(1);
-  const no2 = parseFloat(data.current.air_quality.no2).toFixed(1);
-  const o3 = parseFloat(data.current.air_quality.o3).toFixed(1);
-
-  return {
-    temp: parseInt(data.current.temp_f),
-    weather_description: capitalizeFirstLetter(data.current.condition.text),
-    location: data.location.name + ", " + data.location.region,
-    lon: data.location.lon,
-    lat: data.location.lat,
-    date: data.location.localtime.split(" ")[0],
-    air_quality_pm2_5: pm2_5.toString(),
-    air_quality_so2: so2.toString(),
-    air_quality_no2: no2.toString(),
-    air_quality_o3: o3.toString(),
-    sunset: sunsetTime,
-    sunrise: sunriseTime,
-    humidity: data.current.humidity,
-    pressure: parseInt(data.current.pressure_mb),
-    visibility: parseInt(data.current.vis_miles),
-    feel_like: parseInt(data.current.feelslike_f),
-  };
-}
-
-export async function insertData(table, data) {
-  const { error } = await supabase.from(table).insert([data]);
-  if (error) {
-    console.error("Insert Data failed:", error.message);
-  }
-}
-
-export async function handleFetchData() {
-  const city = "San Antonio";
+export async function handleFetchData(citySelected) {
   try {
     const [apiWeatherResponse] = await Promise.all([
       fetch(
-        `http://api.weatherapi.com/v1/forecast.json?key=${
+        `https://api.weatherapi.com/v1/forecast.json?key=${
           import.meta.env.VITE_WEATHERAPI_KEY
-        }&q=${city}&days=3&aqi=yes&alerts=no`
+        }&q=${citySelected}&days=3&aqi=yes&alerts=no`
       ).then((res) => res.json()),
     ]);
 
@@ -164,120 +140,24 @@ export async function handleFetchData() {
   }
 }
 
-export function insertForecastData(data) {
-  const forecastDays = data.forecast.forecastday;
-  forecastDays.forEach((forecast) => {
-    forecast.hour.forEach((hr) => {
-      insertData("weather_forecast", {
-        date: hr.time,
-        description: hr.condition.text,
-        temp: hr.temp_f,
-      });
-    });
+export function extractForecastData(data) {
+  const object = {};
+  data.forecast.forecastday.forEach((day) => {
+    object[day.date] = {
+      ...day,
+    };
   });
+  return object;
 }
 
-export async function getForecastData(fullDate) {
-  try {
-    const { data: forecast, error } = await supabase
-      .from("weather_forecast")
-      .select("*")
-      .like("date", `${fullDate}%`);
+export function extractTodayData(data, fullDate) {
+  const currentHour = new Date(fullDate).getHours();
+  const result = Object.entries(data.hour).find(([key, forecast]) => {
+    const forecastHour = new Date(forecast.time).getHours();
+    return forecastHour === currentHour;
+  });
 
-    if (error) {
-      console.log("Forecast not found in database:", error);
-    } else {
-      console.log("Setting forecast...");
-      const object = {};
-      forecast.forEach((hr) => {
-        object[hr.date] = {
-          temp: hr.temp,
-          description: hr.description,
-        };
-      });
-      return object;
-    }
-  } catch (err) {
-    console.error("Error fetching today's data:", err);
-  }
-}
-
-function getNextDay(today, dayNum) {
-  const date = new Date(today);
-  date.setDate(date.getDate() + dayNum);
-  // Format the date back to "YYYY-MM-DD"
-  const nextDay = date.toISOString().split("T")[0];
-  return nextDay;
-}
-
-export async function getNextForecastData(fullDate) {
-  try {
-    const { data: forecast0, error0 } = await supabase
-      .from("weather_forecast")
-      .select("*")
-      .like("date", `${getNextDay(fullDate, 1)}%`);
-
-    const { data: forecast1, error1 } = await supabase
-      .from("weather_forecast")
-      .select("*")
-      .like("date", `${getNextDay(fullDate, 2)}%`);
-
-    if (error0 || error1) {
-      console.log("Next Forecast not found in database:", error0, error1);
-    } else {
-      console.log("Setting next forecast...");
-      // Sorting function
-      const sortByTemp = (forecast) => {
-        return forecast.sort((a, b) => a.temp - b.temp);
-      };
-
-      const object0 = {};
-      forecast0.forEach((hr) => {
-        object0[hr.date] = {
-          temp: hr.temp,
-          description: hr.description,
-        };
-      });
-
-      const object1 = {};
-      forecast1.forEach((hr) => {
-        object1[hr.date] = {
-          temp: hr.temp,
-          description: hr.description,
-        };
-      });
-
-      // Get the first and last values for each object
-      const sorted0 = sortByTemp(Object.values(object0));
-      const sorted1 = sortByTemp(Object.values(object1));
-
-      // Get first and last
-      const first0 = sorted0[0];
-      const last0 = sorted0[sorted0.length - 1];
-      const first1 = sorted1[0];
-      const last1 = sorted1[sorted1.length - 1];
-
-      const finalObject = {
-        day1: {
-          day: customGetDate("day", getNextDay(fullDate, 2)),
-          date: customGetDate("date", getNextDay(fullDate, 2)),
-          month: customGetDate("month name", getNextDay(fullDate, 2)),
-          low_temp: first0.temp,
-          high_temp: last0.temp,
-        },
-        day2: {
-          day: customGetDate("day", getNextDay(fullDate, 3)),
-          date: customGetDate("date", getNextDay(fullDate, 3)),
-          month: customGetDate("month name", getNextDay(fullDate, 3)),
-          low_temp: first1.temp,
-          high_temp: last1.temp,
-        },
-      };
-      return finalObject;
-    }
-  } catch (err) {
-    console.error("Error fetching next forecast data:", err);
-  }
+  return result ? result[1] : undefined;
 }
 
 export async function reverseGeoLocation(latitude, longitude) {
@@ -296,4 +176,3 @@ export async function reverseGeoLocation(latitude, longitude) {
     return "Unable to access location";
   }
 }
-

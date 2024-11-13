@@ -1,23 +1,42 @@
+import { object } from "yup";
+import { useEffect, useState } from "react";
+import { customGetDate } from "../functions.js";
+export default function NextDayForecast({
+  nextForecast,
+  fullDate1,
+  fullDate2,
+}) {
 
-export default function NextDayForecast({nextForecast}) {
-
-
- return (
-   <>
-     {nextForecast ? (
-       <>
-         <li className="flex justify-between">
-           <span>{`${nextForecast.day1.date} ${nextForecast.day1.month}`}</span>
-           <span>{`${nextForecast.day1.day}`}</span>
-           <span>{`${nextForecast.day1.low_temp}°C / ${nextForecast.day1.high_temp}°C`}</span>
-         </li>
-         <li className="flex justify-between">
-           <span>{`${nextForecast.day2.date} ${nextForecast.day2.month}`}</span>
-           <span>{`${nextForecast.day2.day}`}</span>
-           <span>{`${nextForecast.day2.low_temp}°C / ${nextForecast.day2.high_temp}°C`}</span>
-         </li>
-       </>
-     ) : null}
-   </>
- );
+  return (
+    <>
+      {nextForecast ? (
+        <>
+          <li className="flex justify-between">
+            <span>{`${customGetDate("date", fullDate1)} ${customGetDate(
+              "month name",
+              fullDate1
+            ).slice(0, 3)}`}</span>
+            <span>{`${customGetDate("day", fullDate1).slice(0, 3)}`}</span>
+            <span>{`${parseInt(
+              nextForecast[fullDate1.slice(0, 10)].day.mintemp_f
+            )}°C / ${parseInt(
+              nextForecast[fullDate1.slice(0, 10)].day.maxtemp_f
+            )}°C`}</span>
+          </li>
+          <li className="flex justify-between">
+            <span>{`${customGetDate("date", fullDate2)} ${customGetDate(
+              "month name",
+              fullDate2
+            ).slice(0, 3)}`}</span>
+            <span>{`${customGetDate("day", fullDate2).slice(0, 3)}`}</span>
+            <span>{`${parseInt(
+              nextForecast[fullDate2.slice(0,10)].day.mintemp_f
+            )}°C / ${parseInt(
+              nextForecast[fullDate2.slice(0, 10)].day.maxtemp_f
+            )}°C`}</span>
+          </li>
+        </>
+      ) : null}
+    </>
+  );
 }

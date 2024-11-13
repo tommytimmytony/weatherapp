@@ -13,85 +13,109 @@ import { supabase } from "../client.js";
 import {
   getAirQualityLabel,
   customGetDate,
+  convertTo24HourTime,
+  getNextDay,
   getAirQualityColor,
-  formatData,
-  insertData,
   handleFetchData,
-  insertForecastData,
-  getForecastData,
-  getNextForecastData,
+  extractForecastData,
+  extractTodayData,
+  capitalizeEachWord,
 } from "../functions.js";
 import WeatherForecast from "../components/WeatherForecast.jsx";
 import NextDayForecast from "../components/NextDayForecast.jsx";
+import { useParams } from "react-router-dom";
+
 export default function Dashboard() {
+  const [weather, setWeather] = useState();
   const [curWeather, setCurWeather] = useState();
-  const [apiWeather, setApiWeather] = useState();
+  const [forecast, setForecast] = useState();
   const [airQualityLabel, setAirQualityLabel] = useState("");
   const [airQualityColor, setAirQualityColor] = useState("green");
-  const [day, setDay] = useState(customGetDate("day"));
+  const [sunrise, setSunrise] = useState(0);
+  const [sunset, setSunset] = useState(0);
   const [fullDate, setFullDate] = useState(customGetDate("full date"));
+  const [fullDate1, setFullDate1] = useState(
+    customGetDate("full date", getNextDay(fullDate, 1))
+  );
+  const [fullDate2, setFullDate2] = useState(
+    customGetDate("full date", getNextDay(fullDate, 2))
+  );
+  const [day, setDay] = useState(customGetDate("day"));
   const [monthName, setMonthName] = useState(customGetDate("month name"));
   const [date, setDate] = useState(customGetDate("date"));
-  const [todayForecast, setTodayForecast] = useState();
-  const [nextForecast, setNextForecast] = useState();
+  const { citySelected } = useParams();
+  const [city, setCity] = useState(citySelected);
 
+  const resetAllVar = () => {
+    setCity("");
+    setDay("");
+    setMonthName("");
+    setDate("");
+    setFullDate("");
+    setFullDate1("");
+    setFullDate2("");
+    setWeather();
+    setForecast();
+    setCurWeather();
+  };
   useEffect(() => {
+    const controller = new AbortController();
     const getTodayData = async () => {
       try {
-        const { data: weather, error } = await supabase
-          .from("weather")
-          .select("*")
-          .eq("date", fullDate)
-          .single();
-
-        if (error) {
-          console.log("Weather not found in database:", error);
-          setApiWeather(await handleFetchData());
-        } else {
-          console.log("Setting weather...");
-          setAirQualityLabel(
-            getAirQualityLabel(
-              weather.air_quality_pm2_5,
-              weather.air_quality_so2,
-              weather.air_quality_no2,
-              weather.air_quality_o3
-            )
-          );
-          setCurWeather(weather);
-          setTodayForecast(await getForecastData(fullDate));
-          setNextForecast(await getNextForecastData(fullDate));
+        resetAllVar();
+        if (citySelected != "null") {
+          setCity(capitalizeEachWord(citySelected));
+          console.log("Fetching weather API...");
+          const data = await handleFetchData(city);
+          const newDate = data.location.localtime;
+          setDay(customGetDate("day", newDate));
+          setMonthName(customGetDate("month name", newDate));
+          setDate(customGetDate("date", newDate));
+          setFullDate(newDate);
+          setFullDate1(getNextDay(newDate, 1));
+          setFullDate2(getNextDay(newDate, 2));
+          setWeather(data);
+          setForecast(extractForecastData(data));
         }
-      } catch (err) {
-        console.error("Error fetching today's data:", err);
+      } catch (error) {
+        console.error("Error fetching today's data:", error);
       }
     };
 
     getTodayData();
-  }, []);
+    return () => controller.abort();
+  }, [citySelected, city]);
 
   useEffect(() => {
-    if (apiWeather) {
-      insertForecastData(apiWeather);
-      setCurWeather(formatData(apiWeather));
+    if (weather) {
       setAirQualityLabel(
         getAirQualityLabel(
-          parseFloat(apiWeather.current.air_quality.pm2_5).toFixed(1),
-          parseFloat(apiWeather.current.air_quality.pm2_5).toFixed(1),
-          parseFloat(apiWeather.current.air_quality.pm2_5).toFixed(1),
-          parseFloat(apiWeather.current.air_quality.pm2_5).toFixed(1)
+          parseFloat(weather.current.air_quality.pm2_5).toFixed(1),
+          parseFloat(weather.current.air_quality.pm2_5).toFixed(1),
+          parseFloat(weather.current.air_quality.pm2_5).toFixed(1),
+          parseFloat(weather.current.air_quality.pm2_5).toFixed(1)
         )
       );
-      setTodayForecast(getForecastData(fullDate));
     }
-  }, [apiWeather]);
-
-  useEffect(() => {
-    insertData("weather", curWeather);
-  }, [curWeather]);
+  }, [weather]);
 
   useEffect(() => {
     setAirQualityColor(getAirQualityColor(airQualityLabel));
   }, [airQualityLabel]);
+
+  useEffect(() => {
+    if (forecast) {
+      setCurWeather(
+        extractTodayData(forecast[fullDate.slice(0, 10)], fullDate)
+      );
+      setSunrise(
+        convertTo24HourTime(forecast[fullDate.slice(0, 10)].astro.sunrise)
+      );
+      setSunset(
+        convertTo24HourTime(forecast[fullDate.slice(0, 10)].astro.sunset)
+      );
+    }
+  }, [forecast]);
 
   return (
     <div className="flex flex-col lg:flex-row h-full w-full p-4 space-y-4 lg:space-y-0 lg:space-x-4">
@@ -101,17 +125,16 @@ export default function Dashboard() {
           <h2 className="text-2xl font-bold mb-2 text-gray-200">Now</h2>
           <div className="text-lg text-gray-300">
             <p className="flex items-center text-5xl font-bold">
-              {curWeather ? `${curWeather.temp}°C` : ""} &nbsp;
+              {curWeather ? `${parseInt(curWeather.temp_f)}°C` : ""} &nbsp;
               <IoSunnyOutline size={50} />
             </p>
-            <p> {curWeather ? `${curWeather.weather_description}` : ""}</p>
+            <p> {curWeather ? `${curWeather.condition.text}` : ""}</p>
             <hr className="w-48 my-2" />
             <p className="flex items-center">
               <MdOutlineDateRange /> &nbsp; {`${day} ${date}, ${monthName}`}
             </p>
             <p className="flex items-center">
-              <CiLocationOn /> &nbsp;{" "}
-              {curWeather ? `${curWeather.location}` : ""}
+              <CiLocationOn /> &nbsp; {weather ? `${city}` : ""}
             </p>
           </div>
         </div>
@@ -122,7 +145,12 @@ export default function Dashboard() {
             Today’s Forecast
           </h2>
           <ul className="space-y-2 text-gray-300">
-            <WeatherForecast todayForecast={todayForecast} />
+            <WeatherForecast
+              todayForecast={
+                forecast ? forecast[fullDate.slice(0, 10)].hour : null
+              }
+              hour={fullDate.slice(11, 13)}
+            />
           </ul>
         </div>
         {/* Future 2 day weather forecast section */}
@@ -131,7 +159,11 @@ export default function Dashboard() {
             2-Day Forecast
           </h2>
           <ul className="space-y-2 text-gray-300">
-            <NextDayForecast nextForecast={nextForecast} />
+            <NextDayForecast
+              nextForecast={forecast}
+              fullDate1={fullDate1}
+              fullDate2={fullDate2}
+            />
             {/* Add more days as needed */}
           </ul>
         </div>
@@ -159,26 +191,34 @@ export default function Dashboard() {
                 <div className="">
                   <p>PM2_5</p>
                   <p className="text-4xl font-bold text-gray-100">
-                    {curWeather ? `${curWeather.air_quality_pm2_5}` : ""}
+                    {curWeather
+                      ? `${curWeather.air_quality.pm2_5.toFixed(1)}`
+                      : ""}
                   </p>
                 </div>
                 <div className="">
                   <p>SO2</p>
                   <p className="text-4xl font-bold text-gray-100">
-                    {curWeather ? `${curWeather.air_quality_so2}` : ""}
+                    {curWeather
+                      ? `${curWeather.air_quality.so2.toFixed(1)}`
+                      : ""}
                   </p>
                 </div>
                 <div className="">
                   <p>NO2</p>
                   <p className="text-4xl font-bold text-gray-100">
-                    {curWeather ? `${curWeather.air_quality_no2}` : ""}
+                    {curWeather
+                      ? `${curWeather.air_quality.no2.toFixed(1)}`
+                      : ""}
                   </p>
                 </div>
                 <div className="">
                   <p>O3</p>
                   <p className="text-4xl font-bold text-gray-100">
                     {" "}
-                    {curWeather ? `${curWeather.air_quality_o3}` : ""}
+                    {curWeather
+                      ? `${curWeather.air_quality.o3.toFixed(1)}`
+                      : ""}
                   </p>
                 </div>
               </div>
@@ -199,7 +239,7 @@ export default function Dashboard() {
                     <p> Sunrise</p>
                     <p className="text-4xl font-bold text-gray-100">
                       {" "}
-                      {curWeather ? `${curWeather.sunrise}` : ""}
+                      {sunrise}
                     </p>
                   </div>
                 </div>
@@ -211,7 +251,7 @@ export default function Dashboard() {
                     <p>Sunset</p>
                     <p className="text-4xl font-bold text-gray-100">
                       {" "}
-                      {curWeather ? `${curWeather.sunset}` : ""}
+                      {sunset}
                     </p>
                   </div>
                 </div>
@@ -240,7 +280,7 @@ export default function Dashboard() {
                 <RiTailwindCssFill size={50} />
                 <p className="text-4xl font-bold text-gray-100 ml-5">
                   {" "}
-                  {curWeather ? `${curWeather.pressure}` : ""}
+                  {curWeather ? `${curWeather.pressure_mb}` : ""}
                 </p>
               </div>
             </div>
@@ -252,7 +292,7 @@ export default function Dashboard() {
                 <BsEyeFill size={50} />
                 <p className="text-4xl font-bold text-gray-100 ml-4">
                   {" "}
-                  {curWeather ? `${curWeather.visibility} mi` : ""}
+                  {curWeather ? `${curWeather.vis_miles} mi` : ""}
                 </p>
               </div>
             </div>
@@ -264,7 +304,7 @@ export default function Dashboard() {
                 <FaTemperatureHigh size={45} />
                 <p className="text-4xl font-bold text-gray-100 ml-4">
                   {" "}
-                  {curWeather ? `${curWeather.feel_like}°C` : ""}
+                  {curWeather ? `${parseInt(curWeather.feelslike_f)}°C` : ""}
                 </p>
               </div>
             </div>
