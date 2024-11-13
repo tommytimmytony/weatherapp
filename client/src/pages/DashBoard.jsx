@@ -9,7 +9,6 @@ import { RiTailwindCssFill } from "react-icons/ri";
 import { FaTemperatureHigh } from "react-icons/fa";
 import { BsEyeFill } from "react-icons/bs";
 import { useState, useEffect, useRef } from "react";
-import { supabase } from "../client.js";
 import {
   getAirQualityLabel,
   customGetDate,
@@ -30,7 +29,7 @@ export default function Dashboard() {
   const [curWeather, setCurWeather] = useState();
   const [forecast, setForecast] = useState();
   const [airQualityLabel, setAirQualityLabel] = useState("");
-  const [airQualityColor, setAirQualityColor] = useState("green");
+  const [airQualityColor, setAirQualityColor] = useState();
   const [sunrise, setSunrise] = useState(0);
   const [sunset, setSunset] = useState(0);
   const [fullDate, setFullDate] = useState(customGetDate("full date"));
@@ -59,7 +58,6 @@ export default function Dashboard() {
     setCurWeather();
   };
   useEffect(() => {
-    const controller = new AbortController();
     const getTodayData = async () => {
       try {
         resetAllVar();
@@ -83,7 +81,6 @@ export default function Dashboard() {
     };
 
     getTodayData();
-    return () => controller.abort();
   }, [citySelected, city]);
 
   useEffect(() => {
@@ -101,6 +98,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     setAirQualityColor(getAirQualityColor(airQualityLabel));
+    console.log(getAirQualityColor(airQualityLabel));
   }, [airQualityLabel]);
 
   useEffect(() => {
@@ -181,9 +179,17 @@ export default function Dashboard() {
                   <FaWind size={20} /> &nbsp; Air Quality Index
                 </h3>
                 <button
-                  className={`ml-10 bg-${airQualityColor}-500 text-white px-4 py-2 rounded-lg hover:bg-${airQualityColor}-600`}
+                  className={`ml-10 text-white px-4 py-2 rounded-lg hover:bg-opacity-90 ${
+                    airQualityColor == "green"
+                      ? "bg-green-500 hover:bg-green-600"
+                      : airQualityColor == "yellow"
+                      ? "bg-yellow-500 hover:bg-yellow-600"
+                      : airQualityColor == "red"
+                      ? "bg-red-500 hover:bg-red-600"
+                      : "bg-gray-500 hover:bg-gray-600"
+                  }`}
                 >
-                  {`${airQualityLabel}`}
+                  {airQualityLabel}
                 </button>
               </div>
 
