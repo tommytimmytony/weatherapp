@@ -7,11 +7,11 @@ import background from "../assets/weather1.jpg";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { supabase } from "../client.js";
-import { useUser } from "../context/UserContext.js";
+import { useWeather } from "../context/WeatherContext.js";
 
 export default function Login() {
   const navigate = useNavigate();
-  const { loginUser } = useUser();
+  const { loginUser } = useWeather();
   const [isSaving, setIsSaving] = useState(false);
 
   const schema = yup.object().shape({

@@ -1,8 +1,9 @@
-import { UserContext } from "./UserContext";
+import { WeatherContext } from "./WeatherContext";
 import { useState } from "react";
 
-export const UserProvider = ({ children }) => {
+export const WeatherProvider = ({ children }) => {
   const [user, setUser] = useState("");
+  const [city, setCity] = useState("");
 
   // Function to update the user information
   const loginUser = (id, email, username) => {
@@ -14,9 +15,11 @@ export const UserProvider = ({ children }) => {
     setUser({ id: null, email: null, username: null });
   };
 
+  
+
   return (
-    <UserContext.Provider value={{ user, loginUser, logoutUser }}>
+    <WeatherContext.Provider value={{ user, city, setCity, loginUser, logoutUser }}>
       {children}
-    </UserContext.Provider>
+    </WeatherContext.Provider>
   );
 };

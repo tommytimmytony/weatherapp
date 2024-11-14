@@ -7,35 +7,33 @@ import { CiLocationOn } from "react-icons/ci";
 import { BiSolidLogInCircle } from "react-icons/bi";
 import { FaHome } from "react-icons/fa";
 import { GiRadarDish } from "react-icons/gi";
-
-import { reverseGeoLocation } from "../functions.js";
+import { useWeather } from "../context/WeatherContext";
 
 export default function NavigationBar() {
   const navigate = useNavigate();
-  const [city, setCity] = useState("");
-  const [location, setLocation] = useState(null);
-  const [latlon, setLatLon] = useState();
+  const [citySelected, setCitySelected] = useState("");
+  const { setCity } = useWeather();
 
   const handleCityChange = (e) => {
-    setCity(e.target.value);
+    setCitySelected(e.target.value);
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter" && city) {
-      setLocation(city);
+    if (e.key === "Enter" && citySelected) {
+      setCity(citySelected);
+      navigate("/dashboard");
     }
   };
 
   async function findCurLocation() {
     if ("geolocation" in navigator) {
       // Get current position
+      console.log("Getting current location...");
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          setLatLon({
-            lat: latitude,
-            lon: longitude,
-          });
+          setCity(`${latitude},${longitude}`);
+          navigate("/dashboard");
         },
         (err) => {
           console.error(err);
@@ -45,19 +43,6 @@ export default function NavigationBar() {
       alert("Geolocation is not available in this browser.");
     }
   }
-
-  useEffect(() => {
-    if (latlon) {
-      const findLocation = async () => {
-        setLocation(await reverseGeoLocation(latlon.lat, latlon.lon));
-      };
-      findLocation();
-    }
-  }, [latlon]);
-
-  useEffect(() => {
-    navigate(`/${location}`);
-  }, [location]);
 
   return (
     <div className="flex items-center justify-between p-4 bg-gray-800 shadow-lg">
@@ -72,7 +57,7 @@ export default function NavigationBar() {
         {/* Icon positioned inside the container */}
         <input
           type="text"
-          value={city}
+          value={citySelected}
           onChange={(e) => {
             handleCityChange(e);
           }}

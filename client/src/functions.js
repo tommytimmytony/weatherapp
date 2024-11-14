@@ -160,19 +160,20 @@ export function extractTodayData(data, fullDate) {
   return result ? result[1] : undefined;
 }
 
-export async function reverseGeoLocation(latitude, longitude) {
-  try {
-    const [geoResponse] = await Promise.all([
-      fetch(
-        `https://api.opencagedata.com/geocode/v1/json?q=${latitude}%2C${longitude}&key=${
-          import.meta.env.VITE_GEO_KEY
-        }`
-      ).then((res) => res.json()),
-    ]);
 
-    return geoResponse.results[0].components.city;
-  } catch (error) {
-    console.error("Fetch data failed:", error);
-    return "Unable to access location";
-  }
-}
+// export async function reverseGeoLocation(latitude, longitude) {
+//   try {
+//     const [geoResponse] = await Promise.all([
+//       fetch(
+//         `https://api.opencagedata.com/geocode/v1/json?q=${latitude}%2C+${longitude}&key=${
+//           import.meta.env.VITE_GEO_KEY
+//         }&pretty=1`
+//       ).then((res) => res.json()),
+//     ]);
+//     console.log(geoResponse)
+//     return geoResponse.results[0].components.city;
+//   } catch (error) {
+//     console.error("Fetch data failed:", error);
+//     return "Unable to access location";
+//   }
+// }

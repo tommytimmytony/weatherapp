@@ -23,6 +23,7 @@ import {
 import WeatherForecast from "../components/WeatherForecast.jsx";
 import NextDayForecast from "../components/NextDayForecast.jsx";
 import { useParams } from "react-router-dom";
+import { useWeather } from "../context/WeatherContext.js";
 
 export default function Dashboard() {
   const [weather, setWeather] = useState();
@@ -42,9 +43,8 @@ export default function Dashboard() {
   const [day, setDay] = useState(customGetDate("day"));
   const [monthName, setMonthName] = useState(customGetDate("month name"));
   const [date, setDate] = useState(customGetDate("date"));
-  const { citySelected } = useParams();
-  const [city, setCity] = useState(citySelected);
-
+  const { city, setCity } = useWeather();
+ 
   const resetAllVar = () => {
     setCity("");
     setDay("");
@@ -61,8 +61,8 @@ export default function Dashboard() {
     const getTodayData = async () => {
       try {
         resetAllVar();
-        if (citySelected != "null") {
-          setCity(capitalizeEachWord(citySelected));
+        if (city != "null") {
+          setCity(capitalizeEachWord(city));
           console.log("Fetching weather API...");
           const data = await handleFetchData(city);
           const newDate = data.location.localtime;
@@ -74,6 +74,7 @@ export default function Dashboard() {
           setFullDate2(getNextDay(newDate, 2));
           setWeather(data);
           setForecast(extractForecastData(data));
+          console.log(data)
         }
       } catch (error) {
         console.error("Error fetching today's data:", error);
@@ -81,7 +82,7 @@ export default function Dashboard() {
     };
 
     getTodayData();
-  }, [citySelected, city]);
+  }, [city]);
 
   useEffect(() => {
     if (weather) {
@@ -98,7 +99,6 @@ export default function Dashboard() {
 
   useEffect(() => {
     setAirQualityColor(getAirQualityColor(airQualityLabel));
-    console.log(getAirQualityColor(airQualityLabel));
   }, [airQualityLabel]);
 
   useEffect(() => {
@@ -132,7 +132,7 @@ export default function Dashboard() {
               <MdOutlineDateRange /> &nbsp; {`${day} ${date}, ${monthName}`}
             </p>
             <p className="flex items-center">
-              <CiLocationOn /> &nbsp; {weather ? `${city}` : ""}
+              <CiLocationOn /> &nbsp; {weather ? `${weather.location.name}` : ""}
             </p>
           </div>
         </div>
