@@ -21,7 +21,8 @@ export default function NavigationBar() {
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && citySelected) {
       setCity(citySelected);
-      navigate("/dashboard");
+      navigate("/");
+      setCitySelected("");
     }
   };
 
@@ -33,7 +34,8 @@ export default function NavigationBar() {
         (position) => {
           const { latitude, longitude } = position.coords;
           setCity(`${latitude},${longitude}`);
-          navigate("/dashboard");
+          setCitySelected("");
+          navigate("/");
         },
         (err) => {
           console.error(err);
@@ -70,12 +72,13 @@ export default function NavigationBar() {
       </div>
 
       {/* Current Location Button */}
-      <button
+      <NavLink
+        to="/"
         className="flex items-center px-4 py-2 bg-gray-700 rounded-lg shadow-md hover:bg-gray-600"
         onClick={() => findCurLocation()}
       >
         <CiLocationOn size={25} /> &nbsp; Current Location
-      </button>
+      </NavLink>
       {/* Home */}
       <NavLink
         to="/"

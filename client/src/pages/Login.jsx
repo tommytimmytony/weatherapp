@@ -98,7 +98,7 @@ export default function Login() {
               {isSaving ? "Loading..." : "Login"}
             </button>
             <a
-              href="/sign-up"
+              href="/signup"
               className="self-center text-slate-300 rounded-lg px-6 py-2.5 mt-8 hover:bg-red-600 hover:scale-105 duration-300"
             >
               {" "}
