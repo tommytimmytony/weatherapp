@@ -44,7 +44,7 @@ export default function Dashboard() {
   const [monthName, setMonthName] = useState(customGetDate("month name"));
   const [date, setDate] = useState(customGetDate("date"));
   const { city, setCity } = useWeather();
- 
+
   const resetAllVar = () => {
     setCity("");
     setDay("");
@@ -74,7 +74,7 @@ export default function Dashboard() {
           setFullDate2(getNextDay(newDate, 2));
           setWeather(data);
           setForecast(extractForecastData(data));
-          console.log(data)
+          console.log(data);
         }
       } catch (error) {
         console.error("Error fetching today's data:", error);
@@ -132,7 +132,8 @@ export default function Dashboard() {
               <MdOutlineDateRange /> &nbsp; {`${day} ${date}, ${monthName}`}
             </p>
             <p className="flex items-center">
-              <CiLocationOn /> &nbsp; {weather ? `${weather.location.name}` : ""}
+              <CiLocationOn /> &nbsp;{" "}
+              {weather ? `${weather.location.name}` : ""}
             </p>
           </div>
         </div>
@@ -197,24 +198,24 @@ export default function Dashboard() {
                 <div className="">
                   <p>PM2_5</p>
                   <p className="text-4xl font-bold text-gray-100">
-                    {curWeather
-                      ? `${curWeather.air_quality.pm2_5.toFixed(1)}`
+                    {weather
+                      ? `${weather.current.air_quality.pm2_5.toFixed(1)}`
                       : ""}
                   </p>
                 </div>
                 <div className="">
                   <p>SO2</p>
                   <p className="text-4xl font-bold text-gray-100">
-                    {curWeather
-                      ? `${curWeather.air_quality.so2.toFixed(1)}`
+                    {weather
+                      ? `${weather.current.air_quality.so2.toFixed(1)}`
                       : ""}
                   </p>
                 </div>
                 <div className="">
                   <p>NO2</p>
                   <p className="text-4xl font-bold text-gray-100">
-                    {curWeather
-                      ? `${curWeather.air_quality.no2.toFixed(1)}`
+                    {weather
+                      ? `${weather.current.air_quality.no2.toFixed(1)}`
                       : ""}
                   </p>
                 </div>
@@ -222,8 +223,8 @@ export default function Dashboard() {
                   <p>O3</p>
                   <p className="text-4xl font-bold text-gray-100">
                     {" "}
-                    {curWeather
-                      ? `${curWeather.air_quality.o3.toFixed(1)}`
+                    {weather
+                      ? `${weather.current.air_quality.o3.toFixed(1)}`
                       : ""}
                   </p>
                 </div>
