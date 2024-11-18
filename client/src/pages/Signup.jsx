@@ -32,7 +32,7 @@ export default function Signup() {
   const [isSaving, setIsSaving] = useState(false);
 
   const onSubmit = async (data) => {
-    console.log(data)
+    console.log(data);
     const { error } = await supabase.from("user").insert([
       {
         email: data.email,
@@ -42,7 +42,9 @@ export default function Signup() {
     ]);
     if (error) {
       console.error("Insert failed:", error.message);
-      toast.error("Username or email already exists. Please Login.");
+      toast.error(
+        "Invalid email address, or the username/email is already in use. Please log in if you already have an account."
+      );
     } else {
       toast.success("Created account successfully");
       reset(); // Clear form only if the insertion was successful
