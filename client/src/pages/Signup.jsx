@@ -32,6 +32,7 @@ export default function Signup() {
   const [isSaving, setIsSaving] = useState(false);
 
   const onSubmit = async (data) => {
+    console.log(data)
     const { error } = await supabase.from("user").insert([
       {
         email: data.email,

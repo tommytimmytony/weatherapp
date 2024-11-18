@@ -13,7 +13,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/DashBoard";
 import Radar from "./pages/Radar";
-
+import { Toaster } from "sonner";
 //Layouts
 import RootLayout from "./Layouts/RootLayout";
 import NavigationBar from "./components/NavigationBar";
@@ -27,6 +27,7 @@ export default function App() {
     location.pathname === "/login" || location.pathname === "/signup";
   return (
     <>
+      <Toaster position="top-right" richColors closeButton />
       {isLoginSignup ? (
         <Routes>
           <Route path="/" element={<Dashboard />} />
