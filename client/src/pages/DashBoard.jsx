@@ -25,7 +25,6 @@ import {
 } from "../functions.js";
 import WeatherForecast from "../components/WeatherForecast.jsx";
 import NextDayForecast from "../components/NextDayForecast.jsx";
-import { useParams } from "react-router-dom";
 import { useWeather } from "../context/WeatherContext.js";
 
 export default function Dashboard() {

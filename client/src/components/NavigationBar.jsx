@@ -1,18 +1,17 @@
-import { NavLink, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 //icons
-import { FaCloud } from "react-icons/fa";
+import { FaCloud, FaBars, FaTimes } from "react-icons/fa";
 import { IoIosSearch } from "react-icons/io";
-import { CiLocationOn } from "react-icons/ci";
-import { BiSolidLogInCircle } from "react-icons/bi";
-import { FaHome } from "react-icons/fa";
-import { GiRadarDish } from "react-icons/gi";
 import { useWeather } from "../context/WeatherContext";
+
+import NavLinks from "./NavLinks";
 
 export default function NavigationBar() {
   const navigate = useNavigate();
   const [citySelected, setCitySelected] = useState("");
-  const { user, setCity } = useWeather();
+  const { setCity, user } = useWeather();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handleCityChange = (e) => {
     setCitySelected(e.target.value);
@@ -25,26 +24,6 @@ export default function NavigationBar() {
       setCitySelected("");
     }
   };
-
-  async function findCurLocation() {
-    if ("geolocation" in navigator) {
-      // Get current position
-      console.log("Getting current location...");
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setCity(`${latitude},${longitude}`);
-          setCitySelected("");
-          navigate("/");
-        },
-        (err) => {
-          console.error(err);
-        }
-      );
-    } else {
-      alert("Geolocation is not available in this browser.");
-    }
-  }
 
   return (
     <div className="flex items-center justify-between p-4 bg-gray-800 shadow-lg">
@@ -70,53 +49,77 @@ export default function NavigationBar() {
           className="w-full pl-10 pr-4 py-2 rounded-lg bg-gray-700 text-white placeholder-gray-400 outline-none"
         />
       </div>
+      <div className={`hidden md:block`}>
+        <div className="flex space-x-2">
+          <NavLinks />
+        </div>
+      </div>
 
       {/* Current Location Button */}
-      <NavLink
+      <NavLinks
         to="/"
         className="flex items-center px-4 py-2 bg-gray-700 rounded-lg shadow-md hover:bg-gray-600"
         onClick={() => findCurLocation()}
       >
         <CiLocationOn size={25} /> &nbsp; Current Location
-      </NavLink>
+      </NavLinks>
       {/* Home */}
-      <NavLink
+      <NavLinks
         to="/"
         className="flex items-center px-4 py-2 bg-gray-700 rounded-lg shadow-md hover:bg-gray-600"
       >
         <FaHome size={25} /> &nbsp; Home
-      </NavLink>
+      </NavLinks>
       {/* Login */}
       {user ? (
         <>
-          <NavLink
+          <NavLinks
             to="login"
             className="flex items-center px-4 py-2 bg-gray-700 rounded-lg shadow-md hover:bg-gray-600"
           >
             <BiSolidLogInCircle size={25} /> &nbsp; Logout
-          </NavLink>
-          <NavLink
+          </NavLinks>
+          <NavLinks
             to="login"
             className="flex items-center px-4 py-2 bg-gray-700 rounded-lg shadow-md hover:bg-gray-600"
           >
             <BiSolidLogInCircle size={25} /> &nbsp; Profile
-          </NavLink>
+          </NavLinks>
         </>
       ) : (
-        <NavLink
+        <NavLinks
           to="login"
           className="flex items-center px-4 py-2 bg-gray-700 rounded-lg shadow-md hover:bg-gray-600"
         >
           <BiSolidLogInCircle size={25} /> &nbsp; Login
-        </NavLink>
+        </NavLinks>
       )}
       {/* Profile */}
-      <NavLink
+      <NavLinks
         to="radar"
         className="flex items-center px-4 py-2 bg-gray-700 rounded-lg shadow-md hover:bg-gray-600"
       >
         <GiRadarDish size={25} /> &nbsp; Radar
-      </NavLink>
+      </NavLinks>
+
+      {/* Hamburger Menu Button */}
+      <div className="relative md:hidden">
+        <button
+          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          className="text-gray-100 focus:outline-none"
+        >
+          {isDropdownOpen ? <FaTimes size={25} /> : <FaBars size={25} />}
+        </button>
+
+        {/* Dropdown Menu */}
+        <div
+          className={`${
+            isDropdownOpen ? "block" : "hidden"
+          } absolute right-0 mt-2 w-48 space-y-2 bg-gray-800 shadow-lg rounded-lg z-10`}
+        >
+          <NavLinks />
+        </div>
+      </div>
     </div>
   );
 }
