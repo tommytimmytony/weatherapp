@@ -55,53 +55,6 @@ export default function NavigationBar() {
         </div>
       </div>
 
-      {/* Current Location Button */}
-      <NavLinks
-        to="/"
-        className="flex items-center px-4 py-2 bg-gray-700 rounded-lg shadow-md hover:bg-gray-600"
-        onClick={() => findCurLocation()}
-      >
-        <CiLocationOn size={25} /> &nbsp; Current Location
-      </NavLinks>
-      {/* Home */}
-      <NavLinks
-        to="/"
-        className="flex items-center px-4 py-2 bg-gray-700 rounded-lg shadow-md hover:bg-gray-600"
-      >
-        <FaHome size={25} /> &nbsp; Home
-      </NavLinks>
-      {/* Login */}
-      {user ? (
-        <>
-          <NavLinks
-            to="login"
-            className="flex items-center px-4 py-2 bg-gray-700 rounded-lg shadow-md hover:bg-gray-600"
-          >
-            <BiSolidLogInCircle size={25} /> &nbsp; Logout
-          </NavLinks>
-          <NavLinks
-            to="login"
-            className="flex items-center px-4 py-2 bg-gray-700 rounded-lg shadow-md hover:bg-gray-600"
-          >
-            <BiSolidLogInCircle size={25} /> &nbsp; Profile
-          </NavLinks>
-        </>
-      ) : (
-        <NavLinks
-          to="login"
-          className="flex items-center px-4 py-2 bg-gray-700 rounded-lg shadow-md hover:bg-gray-600"
-        >
-          <BiSolidLogInCircle size={25} /> &nbsp; Login
-        </NavLinks>
-      )}
-      {/* Profile */}
-      <NavLinks
-        to="radar"
-        className="flex items-center px-4 py-2 bg-gray-700 rounded-lg shadow-md hover:bg-gray-600"
-      >
-        <GiRadarDish size={25} /> &nbsp; Radar
-      </NavLinks>
-
       {/* Hamburger Menu Button */}
       <div className="relative md:hidden">
         <button
