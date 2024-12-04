@@ -1,6 +1,9 @@
 import { CiLocationOn } from "react-icons/ci";
 import { MdOutlineDateRange } from "react-icons/md";
 import { IoSunnyOutline } from "react-icons/io5";
+import { IoThunderstormOutline } from "react-icons/io5";
+import { IoRainyOutline } from "react-icons/io5";
+import { IoCloudyOutline } from "react-icons/io5";
 import { FaWind } from "react-icons/fa";
 import { FiSunrise } from "react-icons/fi";
 import { FiSunset } from "react-icons/fi";
@@ -44,6 +47,7 @@ export default function Dashboard() {
   const [monthName, setMonthName] = useState(customGetDate("month name"));
   const [date, setDate] = useState(customGetDate("date"));
   const { city, setCity } = useWeather();
+  const [weatherIcon, setWeatherIcon] = useState(<IoSunnyOutline size={50} />);
 
   const resetAllVar = () => {
     setCity("");
@@ -74,7 +78,6 @@ export default function Dashboard() {
           setFullDate2(getNextDay(newDate, 2));
           setWeather(data);
           setForecast(extractForecastData(data));
-          console.log(data);
         }
       } catch (error) {
         console.error("Error fetching today's data:", error);
@@ -115,6 +118,24 @@ export default function Dashboard() {
     }
   }, [forecast]);
 
+  useEffect(() => {
+    if (curWeather) {
+      const condition = curWeather.condition.text.toLowerCase();
+      if (condition.includes("thundery ")) {
+        setWeatherIcon(<IoThunderstormOutline size={50} />);
+      } else if (
+        condition.includes("cloudy") ||
+        condition.includes("overcast")
+      ) {
+        setWeatherIcon(<IoCloudyOutline size={50} />);
+      } else if (condition.includes("rain")) {
+        setWeatherIcon(<IoRainyOutline size={50} />);
+      } else {
+        setWeatherIcon(<IoSunnyOutline size={50} />);
+      }
+    }
+  }, [curWeather]);
+
   return (
     <div className="flex flex-col lg:flex-row h-full w-full p-4 space-y-4 lg:space-y-0 lg:space-x-4">
       {/* Left Section: Current Weather , Today weather, and 2-Day Forecast */}
@@ -124,7 +145,7 @@ export default function Dashboard() {
           <div className="text-lg text-gray-300">
             <p className="flex items-center text-5xl font-bold">
               {curWeather ? `${parseInt(curWeather.temp_f)}°C` : ""} &nbsp;
-              <IoSunnyOutline size={50} />
+              {weatherIcon}
             </p>
             <p> {curWeather ? `${curWeather.condition.text}` : ""}</p>
             <hr className="w-48 my-2" />

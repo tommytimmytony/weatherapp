@@ -13,6 +13,7 @@ export default function Login() {
   const navigate = useNavigate();
   const { loginUser } = useWeather();
   const [isSaving, setIsSaving] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const schema = yup.object().shape({
     username: yup.string().required("Please enter your username"),
@@ -80,12 +81,30 @@ export default function Login() {
             </p>
             <label className="text-electricBlue mb-2 mt-10">Password</label>
             <div className="relative w-full">
+              {/* Password Input */}
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 {...register("password")}
                 className="w-full rounded-lg h-9 px-2 pl-8 pb-1 bg-metallicSilver/20 text-metallicSilver shadow-lg outline-none focus:border-neonPink focus:border-2"
               />
               <BsFillKeyFill className="text-lg text-electricBlue absolute top-2 left-2" />
+
+              {/* Show Password Checkbox */}
+              <div className="mt-2 ml-1 flex items-center">
+                <input
+                  type="checkbox"
+                  id="showPassword"
+                  className="mr-2 w-4 h-4 text-electricBlue border-gray-300 rounded focus:ring-neonPink"
+                  checked={showPassword}
+                  onChange={() => setShowPassword((prev) => !prev)}
+                />
+                <label
+                  htmlFor="showPassword"
+                  className="text-sm text-metallicSilver"
+                >
+                  Show Password
+                </label>
+              </div>
             </div>
             <p className="text-sm text-neonPink font-semibold mt-1">
               {errors.password?.message}
