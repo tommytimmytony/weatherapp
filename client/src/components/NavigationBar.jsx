@@ -5,7 +5,7 @@ import { FaCloud, FaBars, FaTimes } from "react-icons/fa";
 import { IoIosSearch } from "react-icons/io";
 import { useWeather } from "../context/WeatherContext";
 
-import NavLinks from "./NavLinks";
+import CustomNavLinks from "./CustomNavLinks";
 
 export default function NavigationBar() {
   const navigate = useNavigate();
@@ -51,7 +51,7 @@ export default function NavigationBar() {
       </div>
       <div className={`hidden md:block`}>
         <div className="flex space-x-2">
-          <NavLinks />
+          <CustomNavLinks />
         </div>
       </div>
 
@@ -70,7 +70,7 @@ export default function NavigationBar() {
             isDropdownOpen ? "block" : "hidden"
           } absolute right-0 mt-2 w-48 space-y-2 bg-gray-800 shadow-lg rounded-lg z-10`}
         >
-          <NavLinks />
+          <CustomNavLinks />
         </div>
       </div>
     </div>

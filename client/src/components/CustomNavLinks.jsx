@@ -4,7 +4,7 @@ import { FaHome } from "react-icons/fa";
 import { BiSolidLogInCircle } from "react-icons/bi";
 import { GiRadarDish } from "react-icons/gi";
 import { useWeather } from "../context/WeatherContext";
-export default function NavLinks() {
+export default function CustomNavLinks() {
   const navigate = useNavigate();
   const { setCity, user } = useWeather();
   async function findCurLocation() {
@@ -61,7 +61,7 @@ export default function NavLinks() {
             <BiSolidLogInCircle size={25} /> &nbsp; Logout
           </NavLink>
           <NavLink
-            to="login"
+            to="profile"
             className="flex items-center px-4 py-2 bg-gray-700 rounded-lg shadow-md hover:bg-gray-600"
           >
             <BiSolidLogInCircle size={25} /> &nbsp; Profile

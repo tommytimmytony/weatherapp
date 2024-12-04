@@ -1,9 +1,6 @@
 import {
-  createBrowserRouter,
-  createRoutesFromElements,
   Route,
   Routes,
-  RouterProvider,
   useLocation,
 } from "react-router-dom";
 import "./App.css";
@@ -13,6 +10,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/DashBoard";
 import Radar from "./pages/Radar";
+import Profile from "./pages/Profile";
 import { Toaster } from "sonner";
 //Layouts
 import RootLayout from "./Layouts/RootLayout";
@@ -43,6 +41,7 @@ export default function App() {
             <Route path="/radar" element={<Radar />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/profile" element={<Profile/>}/>
           </Routes>
         </div>
       )}
