@@ -1,6 +1,8 @@
 # Weather App 🌦️
 Please checkout our website: https://weatherappteam5.netlify.app
 
+Our Team Final Submission: https://docs.google.com/document/d/1A66NPd823VX5fTFQNobGbaqwgpHsKibbdvJRVJirl3I/edit?tab=t.0#heading=h.gjdgxs 
+
 Welcome to the Weather App, your go-to solution for real-time weather updates and short-term forecasting. Designed with simplicity and usability in mind, this application delivers accurate weather data including temperature, humidity, wind speed, and air quality for any city. Our mission is to empower users with reliable weather information to help plan their days effectively.
 
 This semester, our team worked diligently to build a robust application with a responsive design, accommodating multiple user types while ensuring secure and seamless data interactions.
