@@ -124,7 +124,8 @@ export default function Dashboard() {
         setWeatherIcon(<IoThunderstormOutline size={50} />);
       } else if (
         condition.includes("cloudy") ||
-        condition.includes("overcast")
+        condition.includes("overcast") ||
+        condition.includes("mist")
       ) {
         setWeatherIcon(<IoCloudyOutline size={50} />);
       } else if (condition.includes("rain")) {
